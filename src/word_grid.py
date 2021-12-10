@@ -7,6 +7,7 @@ class WordGrid:
 		self.grid = []
 		self.width = width
 		self.area = width**2
+		self.cheated = False
 
 		# creating the grid array
 		for col in range(self.area):
@@ -63,11 +64,11 @@ class WordGrid:
 		for l in range(len(word)):
 			if direction == 0: # horizontal
 				# print(f"{l} + {y} * {self.width} = ", l + y * self.width)
-				self.grid[l + y * self.width] = word[l]
+				self.grid[l + y * self.width] = "\033[32m" + word[l] + "\033[0m" if self.cheated else word[l]
 				self.available_spots[l + y * self.width] = False
 			else: # vertical
 				# print(f"{x} + {l} * {self.width} = ", x + l * self.width)
-				self.grid[x + l * self.width] = word[l]
+				self.grid[x + l * self.width] = "\033[32m" + word[l] + "\033[0m" if self.cheated else word[l]
 				self.available_spots[x + l * self.width] = False
 			
 	
