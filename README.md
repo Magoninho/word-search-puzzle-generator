@@ -1,5 +1,5 @@
 # Word Search Puzzle
-A simple word serch made in python
+A simple word search made in python
 
 ![#demo](./demo.png)
 
