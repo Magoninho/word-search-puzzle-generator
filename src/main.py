@@ -14,7 +14,6 @@ args = parser.parse_args()
 
 def main(cheated=False, words_file=None):
 	words = []
-	print(words_file)
 	file1 = open(words_file, 'r')
 	lines = file1.readlines()
 	file1.close()
