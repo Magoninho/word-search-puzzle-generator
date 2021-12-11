@@ -103,10 +103,11 @@ class WordGrid:
 	# prints the grid on the terminal
 	def print(self):
 
-		print("\033[96m" + ("-"*(2*(self.width)-1)) + "\033[0m" ) # just a nice little line
+		print("\033[96m┌" + ("─"*(2*(self.width)+1)) + "┐\033[0m" ) # just a nice little line
 		for y in range(self.width):
+			print("\033[96m│\033[0m", end=" ")
 			for x in range(self.width):
 				print(self.grid[x + y * self.width], end=" ")
-			print()
-		print("\033[96m" + ("-"*(2*(self.width)-1)) + "\033[0m" )
+			print("\033[96m│\033[0m")
+		print("\033[96m└" + ("─"*(2*(self.width)+1)) + "┘\033[0m" )
 
