@@ -18,7 +18,7 @@ def main(cheated=False, words_file=None):
 	lines = file1.readlines()
 	file1.close()
 
-	for _ in range(8):
+	for _ in range(6):
 		words.append(lines[random.randint(0, len(lines)-1)].strip())
 
 	grid = WordGrid(20)
