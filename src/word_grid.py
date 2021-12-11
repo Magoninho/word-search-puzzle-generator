@@ -46,9 +46,9 @@ class WordGrid:
 
 					# making sure the word won't go out of bounds
 					if random_x + len(word) > self.width and random_direction == 0:
-						random_x -= len(word) - self.width
+						random_x -= (random_x + len(word)) - self.width
 					if random_y + len(word) > self.width and random_direction == 1:
-						random_y -= len(word) - self.width
+						random_y -= (random_x + len(word)) - self.width
 
 					
 					# checking if the word can be placed before placing it
@@ -64,26 +64,26 @@ class WordGrid:
 		for l in range(len(word)):
 			if direction == 0: # horizontal
 				# print(f"{l} + {y} * {self.width} = ", l + y * self.width)
-				self.grid[l + y * self.width] = "\033[32m" + word[l] + "\033[0m" if self.cheated else word[l]
-				self.available_spots[l + y * self.width] = False
+				self.grid[x+l + y * self.width] = "\033[32m" + word[l] + "\033[0m" if self.cheated else word[l]
+				self.available_spots[x+l + y * self.width] = False
 			else: # vertical
 				# print(f"{x} + {l} * {self.width} = ", x + l * self.width)
-				self.grid[x + l * self.width] = "\033[32m" + word[l] + "\033[0m" if self.cheated else word[l]
-				self.available_spots[x + l * self.width] = False
+				self.grid[x + y+l * self.width] = "\033[32m" + word[l] + "\033[0m" if self.cheated else word[l]
+				self.available_spots[x + y+l * self.width] = False
 			
 	
 	# checks if a word can be placed in a position and with a particular direction
 	def can_put_word_at(self, word, x, y, direction):
 		for l in range(len(word)):
 			if direction == 0: # horizontal
-				spot_available = self.available_spots[l + y * self.width]
+				spot_available = self.available_spots[x+l + y * self.width]
 				if spot_available:
 					continue
 				else: 
 					return False
 
 			else: # vertical
-				spot_available = self.available_spots[x + l * self.width]
+				spot_available = self.available_spots[x + y+l * self.width]
 				if spot_available:
 					continue
 				else: 
