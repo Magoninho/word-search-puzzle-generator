@@ -2,6 +2,9 @@ from math import sqrt
 from alphabet import *
 import random
 
+HORIZONTAL 	= 0
+VERTICAL	= 1
+
 class WordGrid:
 	def __init__(self, width) -> None:
 		self.grid = []
@@ -19,7 +22,7 @@ class WordGrid:
 		# True: can be placed
 		# False: can not be placed
 		for spot in range(self.area):
-			self.available_spots.append(True)
+			self.available_spots.append(True) # all spots are available at the beginning
 
 
 	# generates the word grid with words
@@ -27,17 +30,13 @@ class WordGrid:
 	# it will print just some random letters
 	def generate_with_words(self, words):
 		# check if there are too much letters
-
 		if self.can_generate(words):
 			for word in words:
 				finded_place_to_enter_word = False
 				while not finded_place_to_enter_word:
-					if len(word) > self.width:
-						print(f"\nYou entered a word too big for the grid size! (Grid size: {self.width})")
-						return
 
-					
-					random_direction = random.choice([0, 1]) # 0: horizontal; 1: vertical;
+					# chooses a random direction
+					random_direction = random.choice([HORIZONTAL, VERTICAL])
 
 					# random x and y positions of the first letter of the current word
 					random_x = random.randint(0, self.width-1)
@@ -45,49 +44,48 @@ class WordGrid:
 
 
 					# making sure the word won't go out of bounds
-					if random_x + len(word) > self.width and random_direction == 0:
+					if random_x + len(word) > self.width and random_direction == HORIZONTAL:
 						random_x -= (random_x + len(word)) - self.width
-					if random_y + len(word) > self.width and random_direction == 1:
+					if random_y + len(word) > self.width and random_direction == VERTICAL:
 						random_y -= (random_y + len(word)) - self.width
-
-					print(random_y)
+					
+					
 					# checking if the word can be placed before placing it
-					if self.can_put_word_at(word, random_x, random_y, random_direction):
-						self.set_word(word, random_x, random_y, random_direction)
+					if self.is_placeable(word, random_x, random_y, random_direction):
+						self.place_word(word, random_x, random_y, random_direction)
 						finded_place_to_enter_word = True
+					
 
 			# when generating finishes, print itself
 			self.print()
 	
 	# sets a word in a position and with a particular direction
-	def set_word(self, word, x, y, direction):
+	def place_word(self, word, x, y, direction):
+		# for every letter on the word
 		for l in range(len(word)):
-			if direction == 0: # horizontal
-				# print(f"{l} + {y} * {self.width} = ", l + y * self.width)
+			if direction == HORIZONTAL:
+				# place horizontally
 				self.grid[x+l + y * self.width] = "\033[32m" + word[l] + "\033[0m" if self.cheated else word[l]
-				self.available_spots[x+l + y * self.width] = False
-			elif direction == 1: # vertical
-				# print(f"{x} + {l} * {self.width} = ", x + l * self.width)
+				self.available_spots[x+l + y * self.width] = False # making the horizontal spot unavaliable
+			elif direction == VERTICAL:
+				# place vertically
 				self.grid[x + (y+l) * self.width] = "\033[32m" + word[l] + "\033[0m" if self.cheated else word[l]
-				self.available_spots[x + (y+l) * self.width] = False
+				self.available_spots[x + (y+l) * self.width] = False # making the vertical spot unavaliable
 			
 	
 	# checks if a word can be placed in a position and with a particular direction
-	def can_put_word_at(self, word, x, y, direction):
+	def is_placeable(self, word, x, y, direction):
+		# for every letter on the word
 		for l in range(len(word)):
-			if direction == 0: # horizontal
-				spot_available = self.available_spots[x+l + y * self.width]
-				if spot_available:
-					continue
-				else: 
-					return False
+			spot_available = self.available_spots[x+l + y * self.width] if direction == HORIZONTAL else self.available_spots[x + (y+l) * self.width]
 
-			elif direction == 1: # vertical
-				spot_available = self.available_spots[x + (y+l) * self.width]
-				if spot_available:
-					continue
-				else: 
-					return False
+			# if the spot is available, then continue checking
+			if spot_available:
+				continue
+			# if a spot is unavaliable, then is not placeable, returns false 
+			else: 
+				return False
+		# if the loop finishes without returning false, it means that is placeable, returns true
 		return True
 
 	def can_generate(self, words):
@@ -95,9 +93,13 @@ class WordGrid:
 		for word in words:
 			for letter in word:
 				letter_count += 1
+				# if there are much more letters than the grid area
 				if letter_count > self.area:
-					print("\nToo many words and little grid!")
+					print("\nToo many words for a little grid!")
 					return False
+			if len(word) > self.width:
+				print(f"\nYou entered a word too big for the grid size! (Grid size: {self.width})")
+				return False
 		return True
 
 	# prints the grid on the terminal
