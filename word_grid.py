@@ -94,9 +94,25 @@ class WordGrid:
 	def is_placeable(self, word, x, y, direction):
 		# for every letter on the word
 		for l in range(len(word)):
+
+			# getting the current letter (cheated or not)
+			letter = "\033[32m" + word[l] + "\033[0m" if self.cheated else word[l]
+
+			# CHECKING FOR WORD CROSSING
+			# checking if the letter is on the next spot, even if already with a letter from another word placed
+			# that way we can make word crossings
+			if direction == HORIZONTAL:
+				if self.grid[x+l + y * self.width] == letter:
+					# marks the available spot true again (possibly being false before, because of a letter from another word occupying it)
+					# then the current letter on this loop will overlap the same letter from the other word
+					self.available_spots[x+l + y * self.width] = True
+			else:
+				if self.grid[x + (y+l) * self.width] == letter:
+					self.available_spots[x + (y+l) * self.width] = True
+
+			# at the end, check if the spot is available or not
 			spot_available = self.available_spots[x+l + y * self.width] if direction == HORIZONTAL else self.available_spots[x + (y+l) * self.width]
 
-			# if the spot is available, then continue checking
 			if spot_available:
 				continue
 			# if a spot is unavaliable, then is not placeable, returns false 
