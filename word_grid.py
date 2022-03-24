@@ -1,6 +1,7 @@
 from math import sqrt
 from alphabet import *
 import random
+import os
 
 HORIZONTAL 	= 0
 VERTICAL	= 1
@@ -33,7 +34,8 @@ class WordGrid:
 		if self.can_generate(words):
 			for word in words:
 				finded_place_to_enter_word = False
-				while not finded_place_to_enter_word:
+				attempt = 0 # attempts to place word (because there is a chance that it can't find, and then it would be on an infinite loop)
+				while not finded_place_to_enter_word and attempt <= 100:
 
 					# chooses a random direction
 					random_direction = random.choice([HORIZONTAL, VERTICAL])
@@ -55,9 +57,24 @@ class WordGrid:
 						self.place_word(word, random_x, random_y, random_direction)
 						finded_place_to_enter_word = True
 					
-
-			# when generating finishes, print itself
-			self.print()
+					# one more attempt...
+					attempt += 1
+					
+			# checks if the counter is bigger than the number of attempts
+			# this means it could not find a place to place word
+			# (this situation is more common when the grid size is smaller)
+			if attempt >= 100:
+				# asks user if he wants to print the puzzle without some of the words
+				i = input("Error: Could not place some words (out of space), print the puzzle anyway? [y/n] ")
+				# if the user wants, print the grid
+				if i.casefold() == 'y':
+					self.print()
+				# otherwise, exit the program
+				else:
+					exit()
+			# but if it could normally find a place to enter the word, print the grid without errors
+			else:
+				self.print()
 	
 	# sets a word in a position and with a particular direction
 	def place_word(self, word, x, y, direction):
@@ -83,7 +100,7 @@ class WordGrid:
 			if spot_available:
 				continue
 			# if a spot is unavaliable, then is not placeable, returns false 
-			else: 
+			else:
 				return False
 		# if the loop finishes without returning false, it means that is placeable, returns true
 		return True
