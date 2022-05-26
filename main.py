@@ -16,7 +16,7 @@ args = parser.parse_args()
 def main(cheated=False, words_file=None, size=20):
 
 	# generating words from file
-	words = ["wear", "variable", "print", "minimum", "graduate", "room", "bulk", "advise", "completed", "memory"]
+	words = []
 	file1 = open(words_file, 'r')
 	lines = file1.readlines()
 	file1.close()
