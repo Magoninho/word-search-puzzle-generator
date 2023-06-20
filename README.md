@@ -16,3 +16,6 @@ optional arguments:
   -c, --cheated         Hightlight words
   -f FILE, --file FILE  Path to a custom words file. One word per line.
 ```
+
+# License
+This project is licensed under the terms of the MIT license. The MIT License is a permissive license that is short and to the point. It lets people do anything they want with your code as long as they provide attribution back to you and don’t hold you liable.
